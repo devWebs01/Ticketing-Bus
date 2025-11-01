@@ -98,7 +98,7 @@ class RouteResource extends Resource
 
                 Tables\Columns\TextColumn::make('schedules_count')
                     ->label('Jadwal')
-                    ->getStateUsing(fn($record) => $record->schedules()->count())
+                    ->getStateUsing(fn ($record) => $record->schedules()->count())
                     ->sortable(),
 
                 Tables\Columns\ToggleColumn::make('is_active')
@@ -115,7 +115,7 @@ class RouteResource extends Resource
 
                 Tables\Filters\Filter::make('has_schedules')
                     ->label('Memiliki Jadwal')
-                    ->query(fn($query) => $query->has('schedules')),
+                    ->query(fn ($query) => $query->has('schedules')),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

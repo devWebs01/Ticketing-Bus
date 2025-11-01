@@ -69,11 +69,6 @@ class SeatResource extends Resource
                             ->required()
                             ->label('Status'),
 
-                        Forms\Components\TextInput::make('price')
-                            ->numeric()
-                            ->prefix('Rp')
-                            ->label('Harga Kursi')
-                            ->helperText('Kosongkan untuk menggunakan harga jadwal default'),
                     ]),
             ]);
     }
@@ -123,10 +118,9 @@ class SeatResource extends Resource
                         'blocked' => 'Diblokir',
                     }),
 
-                Tables\Columns\TextColumn::make('price')
+                Tables\Columns\TextColumn::make('schedule.price')
                     ->label('Harga')
                     ->money('IDR')
-                    ->getStateUsing(fn ($record) => $record->price ?? $record->schedule->price)
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('schedule.vehicle_number')

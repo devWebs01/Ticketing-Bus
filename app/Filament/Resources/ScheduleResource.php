@@ -25,31 +25,34 @@ class ScheduleResource extends Resource
 
     protected static ?string $navigationGroup = 'Master Data';
 
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Informasi Rute')
+                Forms\Components\Section::make('Informasi Jadwal')
                     ->schema([
                         Forms\Components\Select::make('route_id')
                             ->relationship('route', 'route_name')
-                            ->getOptionLabelFromRecordUsing(fn($record) => "{$record->route_name}")
+                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->route_name}")
                             ->searchable()
                             ->preload()
                             ->required()
                             ->label('Rute'),
 
-                        Forms\Components\DatePicker::make('date')
+                        Forms\Components\Select::make('vehicle_id')
+                            ->relationship('vehicle', 'vehicle_number')
+                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->vehicle_type} - {$record->vehicle_number} ({$record->total_seats} kursi)")
+                            ->searchable()
+                            ->preload()
                             ->required()
-                            ->minDate(today())
-                            ->label('Tanggal Awal')
-                            ->helperText('Tanggal mulai untuk jadwal rutin'),
+                            ->label('Kendaraan'),
 
                         Forms\Components\TimePicker::make('departure_time')
                             ->required()
-                            ->label('Jam Berangkat'),
+                            ->label('Jam Berangkat')
+                            ->seconds(false),
 
                         Forms\Components\CheckboxList::make('days')
                             ->label('Hari Operasional')
@@ -66,44 +69,19 @@ class ScheduleResource extends Resource
                             ->helperText('Pilih hari-hari keberangkatan rutin.')
                             ->required()
                             ->live()
-                            ->visible(fn($context) => $context === 'create'),
-
-                        Forms\Components\TextInput::make('day_of_week')
-                            ->label('Hari Jadwal')
-                            ->getStateUsing(fn ($record) => $record?->day_of_week)
-                            ->visible(fn($context) => $context !== 'create')
-                            ->dehydrated(false), // Don't save this field
+                            ->dehydrated(true)
+                            ->default(fn ($record) => $record?->days->pluck('day_of_week')->toArray() ?? []),
                     ]),
 
-                Forms\Components\Section::make('Detail Kendaraan & Harga')
+                Forms\Components\Section::make('Harga & Status')
                     ->schema([
-                        Forms\Components\TextInput::make('vehicle_number')
-                            ->label('Nomor Kendaraan')
-                            ->placeholder('B 1234 ABC'),
-
-                        Forms\Components\Select::make('vehicle_type')
-                            ->options([
-                                'bus' => 'Bus',
-                                'minibus' => 'Mini Bus',
-                                'van' => 'Van',
-                            ])
-                            ->default('bus')
-                            ->required()
-                            ->label('Tipe Kendaraan'),
-
-                        Forms\Components\TextInput::make('total_seats')
-                            ->required()
-                            ->numeric()
-                            ->minValue(10)
-                            ->maxValue(60)
-                            ->label('Total Kursi'),
-
                         Forms\Components\TextInput::make('price')
                             ->required()
                             ->numeric()
                             ->minValue(0)
                             ->prefix('Rp')
-                            ->label('Harga Tiket'),
+                            ->label('Harga Tiket')
+                            ->step(0.01),
 
                         Forms\Components\Select::make('status')
                             ->options([
@@ -130,34 +108,47 @@ class ScheduleResource extends Resource
                     ->label('Tujuan')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('date')
-                    ->label('Tanggal')
-                    ->date('d/m/Y')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('day_of_week')
-                    ->label('Hari')
-                    ->getStateUsing(fn ($record) => $record?->day_of_week)
-                    ->sortable(),
-
                 Tables\Columns\TextColumn::make('departure_time')
                     ->label('Berangkat')
                     ->time('H:i'),
 
-                Tables\Columns\TextColumn::make('vehicle_number')
+                Tables\Columns\TextColumn::make('days_list')
+                    ->label('Hari Operasional')
+                    ->getStateUsing(function ($record) {
+                        if ($record && $record->days) {
+                            $dayMap = [
+                                'monday' => 'Senin',
+                                'tuesday' => 'Selasa',
+                                'wednesday' => 'Rabu',
+                                'thursday' => 'Kamis',
+                                'friday' => 'Jumat',
+                                'saturday' => 'Sabtu',
+                                'sunday' => 'Minggu',
+                            ];
+
+                            return $record->days->pluck('day_of_week')->map(function ($day) use ($dayMap) {
+                                return $dayMap[$day] ?? $day;
+                            })->join(', ');
+                        }
+
+                        return '';
+                    })
+                    ->limit(30),
+
+                Tables\Columns\TextColumn::make('vehicle.vehicle_number')
                     ->label('No. Kendaraan')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('vehicle_type')
+                Tables\Columns\TextColumn::make('vehicle.vehicle_type')
                     ->label('Tipe')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'bus' => 'success',
                         'minibus' => 'warning',
                         'van' => 'info',
                     }),
 
-                Tables\Columns\TextColumn::make('total_seats')
+                Tables\Columns\TextColumn::make('vehicle.total_seats')
                     ->label('Total Kursi')
                     ->numeric()
                     ->sortable(),
@@ -170,12 +161,12 @@ class ScheduleResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'active' => 'success',
                         'cancelled' => 'danger',
                         'completed' => 'info',
                     })
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'active' => 'Aktif',
                         'cancelled' => 'Dibatalkan',
                         'completed' => 'Selesai',
@@ -206,15 +197,21 @@ class ScheduleResource extends Resource
 
                 Tables\Filters\Filter::make('today')
                     ->label('Hari Ini')
-                    ->query(fn(Builder $query): Builder => $query->whereDate('date', today())),
+                    ->query(fn (Builder $query): Builder => $query->activeToday()),
 
-                Tables\Filters\Filter::make('upcoming')
-                    ->label('Mendatang')
-                    ->query(fn(Builder $query): Builder => $query->where('date', '>=', today())),
-
-                Tables\Filters\Filter::make('past')
-                    ->label('Lampau')
-                    ->query(fn(Builder $query): Builder => $query->where('date', '<', today())),
+                Tables\Filters\SelectFilter::make('day_of_week')
+                    ->label('Hari Operasional')
+                    ->options([
+                        'monday' => 'Senin',
+                        'tuesday' => 'Selasa',
+                        'wednesday' => 'Rabu',
+                        'thursday' => 'Kamis',
+                        'friday' => 'Jumat',
+                        'saturday' => 'Sabtu',
+                        'sunday' => 'Minggu',
+                    ])
+                    ->query(fn (Builder $query, array $data): Builder => isset($data['value']) ? $query->activeOnDay($data['value']) : $query
+                    ),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -223,8 +220,8 @@ class ScheduleResource extends Resource
                     ->label('Buat Manifest')
                     ->icon('heroicon-o-document-text')
                     ->color('info')
-                    ->visible(fn($record) => ! $record->tripManifest && $record->status === 'active')
-                    ->url(fn($record) => route('filament.admin.resources.trip-manifests.create', [
+                    ->visible(fn ($record) => ! $record->tripManifest && $record->status === 'active')
+                    ->url(fn ($record) => route('filament.admin.resources.trip-manifests.create', [
                         'schedule_id' => $record->id,
                     ])),
             ])
@@ -233,7 +230,7 @@ class ScheduleResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('date', 'desc');
+            ->defaultSort('departure_time', 'asc');
     }
 
     public static function getRelations(): array

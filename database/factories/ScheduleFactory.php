@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Route;
+use App\Models\Vehicle;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,28 +20,16 @@ class ScheduleFactory extends Factory
     {
         return [
             'route_id' => Route::factory(),
-            'departure_time' => $this->faker->time('H:i'),
-            'date' => $this->faker->dateTimeBetween('now', '+30 days'),
+            'vehicle_id' => Vehicle::factory(),
+            'departure_time' => $this->faker->time('H:i:s'),
             'price' => $this->faker->randomFloat(2, 100000, 1000000),
-            'total_seats' => $this->faker->numberBetween(20, 50),
             'status' => $this->faker->randomElement(['active', 'cancelled', 'completed']),
-            'vehicle_number' => $this->faker->bothify('?? #### ??'),
-            'vehicle_type' => $this->faker->randomElement(['bus', 'minibus', 'van']),
         ];
     }
 
     public function active()
     {
         return $this->state(fn (array $attributes) => [
-            'status' => 'active',
-            'date' => $this->faker->dateTimeBetween('now', '+7 days'),
-        ]);
-    }
-
-    public function future()
-    {
-        return $this->state(fn (array $attributes) => [
-            'date' => $this->faker->dateTimeBetween('+1 day', '+30 days'),
             'status' => 'active',
         ]);
     }
@@ -50,5 +39,18 @@ class ScheduleFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'route_id' => $route->id,
         ]);
+    }
+
+    public function withDays(?array $days = null)
+    {
+        $days = $days ?? $this->faker->randomElements([
+            'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday',
+        ], $this->faker->numberBetween(1, 7));
+
+        return $this->afterCreating(function (\App\Models\Schedule $schedule) use ($days) {
+            foreach ($days as $day) {
+                $schedule->days()->create(['day_of_week' => $day]);
+            }
+        });
     }
 }

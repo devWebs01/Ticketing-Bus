@@ -14,16 +14,15 @@ return new class extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->time('departure_time');
-            $table->date('date');
             $table->decimal('price', 10, 2);
-            $table->integer('total_seats');
             $table->enum('status', ['active', 'cancelled', 'completed'])->default('active');
-            $table->string('vehicle_number')->nullable();
-            $table->string('vehicle_type')->default('bus');
             $table->timestamps();
 
             $table->unsignedBigInteger('route_id')->nullable()->after('id');
             $table->foreign('route_id')->references('id')->on('routes')->onDelete('set null');
+
+            $table->unsignedBigInteger('vehicle_id')->nullable()->after('route_id');
+            $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('set null');
         });
     }
 

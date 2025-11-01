@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,20 +15,16 @@ class Schedule extends Model
 
     protected $fillable = [
         'route_id',
+        'vehicle_id',
         'departure_time',
-        'date',
         'price',
-        'total_seats',
         'status',
-        'vehicle_number',
-        'vehicle_type',
     ];
 
     protected function casts(): array
     {
         return [
-            'departure_time' => 'datetime',
-            'date' => 'date',
+            'departure_time' => 'datetime:H:i:s',
             'price' => 'decimal:2',
         ];
     }
@@ -35,6 +32,16 @@ class Schedule extends Model
     public function route(): BelongsTo
     {
         return $this->belongsTo(Route::class);
+    }
+
+    public function vehicle(): BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function days(): HasMany
+    {
+        return $this->hasMany(ScheduleDay::class);
     }
 
     public function seats(): HasMany
@@ -67,20 +74,42 @@ class Schedule extends Model
         return $this->route?->route_name ?? '';
     }
 
-    public function getDayOfWeekAttribute(): string
+    public function getDaysListAttribute(): string
     {
-        if ($this->date) {
+        if ($this->relationLoaded('days') && $this->days->isNotEmpty()) {
             $dayMap = [
-                'Sunday' => 'Minggu',
-                'Monday' => 'Senin', 
-                'Tuesday' => 'Selasa',
-                'Wednesday' => 'Rabu',
-                'Thursday' => 'Kamis',
-                'Friday' => 'Jumat',
-                'Saturday' => 'Sabtu'
+                'monday' => 'Senin',
+                'tuesday' => 'Selasa',
+                'wednesday' => 'Rabu',
+                'thursday' => 'Kamis',
+                'friday' => 'Jumat',
+                'saturday' => 'Sabtu',
+                'sunday' => 'Minggu',
             ];
-            return $dayMap[date('l', strtotime($this->date))] ?? date('l', strtotime($this->date));
+
+            return $this->days->pluck('day_of_week')->map(function ($day) use ($dayMap) {
+                return $dayMap[$day] ?? $day;
+            })->join(', ');
         }
+
+        // Fallback to query the database if relation not loaded
+        $days = $this->days()->pluck('day_of_week');
+        if ($days->isNotEmpty()) {
+            $dayMap = [
+                'monday' => 'Senin',
+                'tuesday' => 'Selasa',
+                'wednesday' => 'Rabu',
+                'thursday' => 'Kamis',
+                'friday' => 'Jumat',
+                'saturday' => 'Sabtu',
+                'sunday' => 'Minggu',
+            ];
+
+            return $days->map(function ($day) use ($dayMap) {
+                return $dayMap[$day] ?? $day;
+            })->join(', ');
+        }
+
         return '';
     }
 
@@ -91,8 +120,20 @@ class Schedule extends Model
 
     public function isBookable(): bool
     {
-        return $this->status === 'active' &&
-                ! $this->tripManifest &&
-                $this->date->isFuture();
+        return $this->status === 'active' && ! $this->tripManifest;
+    }
+
+    public function scopeActiveToday(Builder $query): Builder
+    {
+        return $query->whereHas('days', function ($q) {
+            $q->where('day_of_week', strtolower(now()->format('l')));
+        })->where('status', 'active');
+    }
+
+    public function scopeActiveOnDay(Builder $query, string $day): Builder
+    {
+        return $query->whereHas('days', function ($q) use ($day) {
+            $q->where('day_of_week', strtolower($day));
+        })->where('status', 'active');
     }
 }

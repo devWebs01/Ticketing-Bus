@@ -16,13 +16,12 @@ class Seat extends Model
         'seat_number',
         'seat_type',
         'status',
-        'price',
     ];
 
     protected function casts(): array
     {
         return [
-            'price' => 'decimal:2',
+            //
         ];
     }
 
