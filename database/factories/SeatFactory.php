@@ -19,7 +19,7 @@ class SeatFactory extends Factory
     {
         return [
             'schedule_id' => Schedule::factory(),
-            'seat_number' => $this->faker->unique()->numerify('A##'),
+            'seat_number' => $this->faker->numerify('A##'),
             'seat_type' => $this->faker->randomElement(['regular', 'vip', 'business']),
             'status' => $this->faker->randomElement(['available', 'booked', 'blocked']),
             'price' => $this->faker->randomFloat(2, 50000, 500000),

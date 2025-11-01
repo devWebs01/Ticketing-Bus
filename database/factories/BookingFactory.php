@@ -20,7 +20,7 @@ class BookingFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->customer(),
+            'user_id' => User::factory(),
             'schedule_id' => Schedule::factory()->future(),
             'seat_id' => Seat::factory()->available(),
             'booking_date' => $this->faker->dateTimeBetween('-1 week', 'now'),

@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->string('departure_city');
-            $table->string('arrival_city');
             $table->time('departure_time');
-            $table->time('arrival_time');
             $table->date('date');
             $table->decimal('price', 10, 2);
             $table->integer('total_seats');
@@ -24,6 +21,9 @@ return new class extends Migration
             $table->string('vehicle_number')->nullable();
             $table->string('vehicle_type')->default('bus');
             $table->timestamps();
+
+            $table->unsignedBigInteger('route_id')->nullable()->after('id');
+            $table->foreign('route_id')->references('id')->on('routes')->onDelete('set null');
         });
     }
 

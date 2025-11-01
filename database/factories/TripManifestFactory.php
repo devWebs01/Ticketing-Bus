@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Schedule;
 use App\Models\User;
-use App\Models\UserDetail;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

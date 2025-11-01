@@ -19,7 +19,7 @@ class UserDetail extends Model
         'profile_image',
         'date_of_birth',
         'gender',
-        'identity_number', 
+        'identity_number',
         'emergency_contact_name',
         'emergency_contact_phone',
     ];

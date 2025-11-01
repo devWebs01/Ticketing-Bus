@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Route;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,14 +17,9 @@ class ScheduleFactory extends Factory
      */
     public function definition(): array
     {
-        $departureTime = $this->faker->time('H:i');
-        $arrivalTime = $this->faker->time('H:i', $departureTime);
-
         return [
-            'departure_city' => $this->faker->randomElement(['Jakarta', 'Bandung', 'Surabaya', 'Yogyakarta', 'Semarang', 'Malang', 'Solo', 'Denpasar']),
-            'arrival_city' => $this->faker->randomElement(['Jakarta', 'Bandung', 'Surabaya', 'Yogyakarta', 'Semarang', 'Malang', 'Solo', 'Denpasar']),
-            'departure_time' => $departureTime,
-            'arrival_time' => $arrivalTime,
+            'route_id' => Route::factory(),
+            'departure_time' => $this->faker->time('H:i'),
             'date' => $this->faker->dateTimeBetween('now', '+30 days'),
             'price' => $this->faker->randomFloat(2, 100000, 1000000),
             'total_seats' => $this->faker->numberBetween(20, 50),
@@ -46,6 +42,13 @@ class ScheduleFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'date' => $this->faker->dateTimeBetween('+1 day', '+30 days'),
             'status' => 'active',
+        ]);
+    }
+
+    public function forRoute(Route $route)
+    {
+        return $this->state(fn (array $attributes) => [
+            'route_id' => $route->id,
         ]);
     }
 }

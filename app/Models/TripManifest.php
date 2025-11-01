@@ -20,7 +20,9 @@ class TripManifest extends Model
         'total_revenue',
         'notes',
         'status',
-        'staff_notes', 
+        'staff_notes',
+        'driver_id',
+        'conductor_id',
     ];
 
     protected function casts(): array
@@ -35,6 +37,16 @@ class TripManifest extends Model
     public function schedule(): BelongsTo
     {
         return $this->belongsTo(Schedule::class);
+    }
+
+    public function driver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'driver_id');
+    }
+
+    public function conductor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'conductor_id');
     }
 
     public function getManifestStatusTextAttribute(): string
