@@ -20,7 +20,6 @@ class TripManifest extends Model
         'total_revenue',
         'notes',
         'status',
-        'staff_notes',
         'driver_id',
         'conductor_id',
     ];
@@ -62,7 +61,19 @@ class TripManifest extends Model
 
     public function canBeActivated(): bool
     {
-        return $this->status === 'prepared' && $this->schedule->date->isToday();
+        return $this->status === 'prepared' && $this->schedule->isActiveToday();
+    }
+
+    public static function generateManifestNumber(): string
+    {
+        $today = now()->format('Ymd');
+        $prefix = 'SJ';
+
+        // Get the count of manifests for today
+        $todayCount = self::whereDate('created_at', today())->count();
+        $sequence = str_pad($todayCount + 1, 3, '0', STR_PAD_LEFT);
+
+        return "{$prefix}-{$today}-{$sequence}";
     }
 
     public function bookings(): HasMany

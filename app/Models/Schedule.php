@@ -136,4 +136,82 @@ class Schedule extends Model
             $q->where('day_of_week', strtolower($day));
         })->where('status', 'active');
     }
+
+    public function generateSeatsFromVehicle(): void
+    {
+        $this->generateSeatsFromVehicleInternal(false);
+    }
+
+    public function forceRegenerateSeats(): void
+    {
+        // Clear existing seats first
+        $this->seats()->delete();
+
+        // Generate new seats
+        $this->generateSeatsFromVehicleInternal(true);
+    }
+
+    private function generateSeatsFromVehicleInternal(bool $force = false): void
+    {
+        // Check if seats already exist for this schedule (unless forced)
+        $existingSeatCount = $this->seats()->count();
+        if (! $force && $existingSeatCount > 0) {
+            // Seats already exist, don't regenerate
+            return;
+        }
+
+        // Get vehicle seats template
+        $vehicleSeats = $this->vehicle->seats;
+
+        if ($vehicleSeats->isEmpty()) {
+            // No template seats available, create basic seats
+            $this->generateBasicSeats($force);
+
+            return;
+        }
+
+        foreach ($vehicleSeats as $vehicleSeat) {
+            $this->seats()->create([
+                'seat_number' => $vehicleSeat->seat_number,
+                'seat_type' => $vehicleSeat->seat_type,
+                'status' => 'available',
+            ]);
+        }
+    }
+
+    public function generateBasicSeats(bool $force = false): void
+    {
+        // Check if seats already exist (unless forced)
+        if (! $force && $this->seats()->count() > 0) {
+            return;
+        }
+
+        // Generate basic seats if no vehicle template available
+        $totalSeats = $this->vehicle->total_seats ?? 20;
+
+        for ($i = 1; $i <= $totalSeats; $i++) {
+            $seatNumber = 'A'.str_pad($i, 2, '0', STR_PAD_LEFT);
+            $seatType = $i <= 2 ? 'vip' : 'regular';
+
+            $this->seats()->create([
+                'seat_number' => $seatNumber,
+                'seat_type' => $seatType,
+                'status' => 'available',
+            ]);
+        }
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (Schedule $schedule) {
+            $schedule->generateSeatsFromVehicle();
+        });
+
+        static::updated(function (Schedule $schedule) {
+            if ($schedule->wasChanged('vehicle_id')) {
+                // Force regeneration when vehicle changes
+                $schedule->forceRegenerateSeats();
+            }
+        });
+    }
 }

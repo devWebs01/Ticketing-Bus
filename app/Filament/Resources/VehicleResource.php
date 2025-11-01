@@ -69,7 +69,8 @@ class VehicleResource extends Resource
                         Forms\Components\Textarea::make('notes')
                             ->rows(3)
                             ->label('Catatan')
-                            ->helperText('Kapasitas, fasilitas, atau informasi tambahan'),
+                            ->helperText('Kapasitas, fasilitas, atau informasi tambahan')
+                            ->columnSpanFull(),
                     ])
                     ->columns(2),
             ]);

@@ -35,20 +35,31 @@ class TripManifestResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('schedule_id')
                             ->relationship('schedule', 'route.origin')
-                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->route->origin} → {$record->route->destination} | ".
-                                $record->date->format('d/m/Y').' | '.
-                                $record->departure_time->format('H:i')
-                            )
+                            ->getOptionLabelFromRecordUsing(function ($record) {
+                                // Ensure relationships are loaded
+                                if (! $record->relationLoaded('route')) {
+                                    $record->load('route');
+                                }
+                                if (! $record->relationLoaded('days')) {
+                                    $record->load('days');
+                                }
+
+                                return "{$record->route->origin} → {$record->route->destination} | ".
+                                    $record->days_list.' | '.
+                                    $record->departure_time->format('H:i');
+                            })
                             ->searchable()
                             ->preload()
                             ->required()
                             ->label('Jadwal'),
 
                         Forms\Components\TextInput::make('manifest_number')
+                            ->label('No. Surat Jalan')
+                            ->default(fn () => \App\Models\TripManifest::generateManifestNumber())
                             ->required()
                             ->unique(ignoreRecord: true)
-                            ->label('Nomor Manifest')
-                            ->placeholder('MF-20241101-001'),
+                            ->readOnly()
+                            ->helperText('Nomor surat jalan akan dibuat otomatis'),
 
                         Forms\Components\Select::make('status')
                             ->options([
@@ -104,10 +115,6 @@ class TripManifestResource extends Resource
                         Forms\Components\Textarea::make('notes')
                             ->rows(3)
                             ->label('Catatan'),
-
-                        Forms\Components\Textarea::make('staff_notes')
-                            ->rows(3)
-                            ->label('Catatan Staff'),
                     ]),
             ]);
     }
@@ -117,7 +124,7 @@ class TripManifestResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('manifest_number')
-                    ->label('No. Manifest')
+                    ->label('No. Surat Jalan')
                     ->searchable()
                     ->sortable()
                     ->copyable(),
@@ -130,9 +137,9 @@ class TripManifestResource extends Resource
                     ->label('Tujuan')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('schedule.date')
-                    ->label('Tanggal')
-                    ->date('d/m/Y')
+                Tables\Columns\TextColumn::make('schedule.days_list')
+                    ->label('Hari Operasional')
+                    ->getStateUsing(fn ($record) => $record->schedule?->days_list ?? '-')
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('driver.name')

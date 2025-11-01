@@ -18,6 +18,18 @@ class EditSchedule extends EditRecord
         ];
     }
 
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+
+        $schedule = Schedule::with('days')->find($data['id']);
+
+        if ($schedule && $schedule->days) {
+            $data['days'] = $schedule->days->pluck('day_of_week')->toArray();
+        }
+
+        return $data;
+    }
+
     protected function handleRecordUpdate($record, array $data): Schedule
     {
         $days = $data['days'] ?? [];
@@ -25,9 +37,7 @@ class EditSchedule extends EditRecord
 
         $record->update($data);
 
-        // Update the schedule days
         $record->days()->delete(); // Remove existing days
-
         if (! empty($days)) {
             foreach ($days as $day) {
                 $record->days()->create(['day_of_week' => $day]);

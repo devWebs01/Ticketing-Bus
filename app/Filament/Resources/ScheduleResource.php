@@ -69,8 +69,12 @@ class ScheduleResource extends Resource
                             ->helperText('Pilih hari-hari keberangkatan rutin.')
                             ->required()
                             ->live()
-                            ->dehydrated(true)
-                            ->default(fn ($record) => $record?->days->pluck('day_of_week')->toArray() ?? []),
+                            ->afterStateHydrated(function ($component, $state, $record) {
+                                // Isi state dengan data dari relationship
+                                if ($record && $record->days) {
+                                    $component->state($record->days->pluck('day_of_week')->toArray());
+                                }
+                            }),
                     ]),
 
                 Forms\Components\Section::make('Harga & Status')
@@ -210,7 +214,8 @@ class ScheduleResource extends Resource
                         'saturday' => 'Sabtu',
                         'sunday' => 'Minggu',
                     ])
-                    ->query(fn (Builder $query, array $data): Builder => isset($data['value']) ? $query->activeOnDay($data['value']) : $query
+                    ->query(
+                        fn (Builder $query, array $data): Builder => isset($data['value']) ? $query->activeOnDay($data['value']) : $query
                     ),
             ])
             ->actions([
@@ -238,6 +243,22 @@ class ScheduleResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function mutateFormDataBeforeFill(array $data): array
+    {
+        // Coba ambil id dari data atau dari route param ('record' karena route '/{record}/edit')
+        $id = $data['id'] ?? request()->route('record');
+
+        if ($id) {
+            $schedule = \App\Models\Schedule::with('days')->find($id);
+
+            if ($schedule) {
+                $data['days'] = $schedule->days->pluck('day_of_week')->toArray();
+            }
+        }
+
+        return $data;
     }
 
     public static function getPages(): array
