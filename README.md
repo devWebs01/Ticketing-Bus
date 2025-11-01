@@ -7,7 +7,7 @@ Sistem pemesanan tiket bus online untuk PT. Four Best Synergy yang memungkinkan 
 - **Manajemen User**: Sistem role-based dengan customer, admin, dan checker
 - **Manajemen Jadwal**: CRUD jadwal bus dengan informasi lengkap
 - **Pemesanan Kursi**: Sistem pemilihan kursi real-time
-- **Pembayaran**: Multiple payment method (cash, transfer, credit card, e-wallet)
+- **Pembayaran**: Pembayaran Upload File bukti pembayaran
 - **Trip Manifest**: Manajemen perjalanan dengan driver dan conductor
 - **Panel Admin**: Interface untuk mengelola semua aspek sistem
 
@@ -66,8 +66,15 @@ Sistem pemesanan tiket bus online untuk PT. Four Best Synergy yang memungkinkan 
 
 Aplikasi akan berjalan di `http://localhost:8000`
 
-## 📚 Dokumentasi
+## 📚 Login
 
-- [Entity-Relationship Diagram](docs/erd_diagram.md)
-- [System Requirements](docs/test-system-booking-tiket-bus-pt-four-best-synergy.pdf)
-- [Schedule System Flow](docs/schedule-system-flow.md)
+1. **Masuk ke halaman login**
+   ```bash
+   http://localhost:8000/admin
+   ```
+2. **Login email & password**
+   ```bash
+   Gunakan email & password :
+   Email : admin@testing.com
+   Kata sandi : password
+   ```
