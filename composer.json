@@ -8,8 +8,10 @@
     "require": {
         "php": "^8.2",
         "filament/filament": "^3.3",
+        "laravel/folio": "^1.1",
         "laravel/framework": "^11.31",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "livewire/volt": "^1.8"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

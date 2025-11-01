@@ -49,7 +49,9 @@
 
             <!-- ======= Main =======-->
             <main>
-                {{ $slot }}
+                <div class="pt-5">
+                    {{ $slot }}
+                </div>
             </main>
 
             <!-- Include Footer -->

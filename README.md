@@ -1,68 +1,347 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem E-Ticketing Bus PT. Four Best Synergy
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="https://img.shields.io/badge/Laravel-11-red.svg" alt="Laravel 11">
+  <img src="https://img.shields.io/badge/PHP-8.2+-blue.svg" alt="PHP 8.2+">
+  <img src="https://img.shields.io/badge/MySQL-8.0+-orange.svg" alt="MySQL 8.0+">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License">
 </p>
 
-## About Laravel
+## 📋 Deskripsi Sistem
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistem E-Ticketing Bus adalah aplikasi web modern untuk pemesanan tiket bus antar kota yang dikembangkan khusus untuk PT. Four Best Synergy. Sistem ini menyediakan platform lengkap untuk mengelola operasional bus, mulai dari manajemen jadwal, pemesanan kursi, pembayaran, hingga pelaporan perjalanan.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 🎯 Tujuan Sistem
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Memudahkan pelanggan dalam memesan tiket bus secara online
+- Mengoptimalkan manajemen operasional perusahaan bus
+- Meningkatkan efisiensi proses pemesanan dan pembayaran
+- Menyediakan data real-time untuk pengambilan keputusan
+- Mengurangi kesalahan manual dalam proses booking
 
-## Learning Laravel
+## ✨ Fitur Utama
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 👥 Manajemen Pengguna
+- **Role-based Access Control**: Customer, Admin, Checker
+- **Registrasi & Login**: Sistem autentikasi yang aman
+- **Profil Pengguna**: Manajemen data pribadi pelanggan
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🚌 Manajemen Armada & Jadwal
+- **CRUD Rute**: Tambah, edit, hapus rute perjalanan
+- **Manajemen Kendaraan**: Data bus dan kapasitas kursi
+- **Jadwal Perjalanan**: Sistem jadwal dinamis dengan hari operasional
+- **Seat Layout**: Konfigurasi layout kursi per kendaraan
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🎫 Sistem Pemesanan
+- **Pencarian Jadwal**: Filter berdasarkan tanggal, rute, waktu
+- **Pemilihan Kursi**: Interface real-time untuk memilih kursi
+- **Booking Process**: Proses pemesanan yang aman dan terstruktur
+- **Konfirmasi Booking**: Email/SMS notifikasi
 
-## Laravel Sponsors
+### 💳 Sistem Pembayaran
+- **Multiple Payment Methods**:
+  - Tunai (Cash)
+  - Transfer Bank
+  - Kartu Kredit/Debit
+  - E-Wallet (GoPay, OVO, Dana, LinkAja)
+- **Payment Gateway Integration**: Mendukung berbagai provider
+- **Payment Status Tracking**: Monitoring status pembayaran real-time
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 📊 Trip Manifest & Operasional
+- **Surat Jalan**: Dokumen resmi perjalanan
+- **Driver & Conductor Assignment**: Penugasan kru perjalanan
+- **Manifest Penumpang**: Daftar penumpang per trip
+- **Check-in System**: Sistem boarding untuk checker
 
-### Premium Partners
+### 👨‍💼 Panel Admin (Filament)
+- **Dashboard Analytics**: Statistik penjualan dan operasional
+- **User Management**: Kelola pengguna dan role
+- **Content Management**: Update informasi perusahaan
+- **Reporting System**: Laporan keuangan dan operasional
+- **Settings Management**: Konfigurasi sistem
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## 🛠️ Teknologi & Stack
 
-## Contributing
+### Backend
+- **Framework**: Laravel 11.x
+- **PHP Version**: 8.2 atau lebih tinggi
+- **Database**: MySQL 8.0+
+- **ORM**: Eloquent ORM
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Frontend
+- **CSS Framework**: Tailwind CSS
+- **JavaScript Framework**: Livewire (Full-stack framework untuk Laravel)
+- **UI Components**: Bootstrap 5 + Custom Components
+- **Icons**: Bootstrap Icons
 
-## Code of Conduct
+### Admin Panel
+- **Framework**: Filament 3.x
+- **Theme**: Default Filament dengan custom styling
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Additional Libraries
+- **Authentication**: Laravel Sanctum/Breeze
+- **File Storage**: Laravel Storage (Local/Public Disk)
+- **Email**: Laravel Mail
+- **Queue**: Laravel Queue untuk background jobs
+- **Testing**: PHPUnit + Laravel Dusk
 
-## Security Vulnerabilities
+## 📋 Requirements Sistem
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Server Requirements
+- **PHP**: 8.2 atau lebih tinggi
+- **Web Server**: Apache/Nginx dengan mod_rewrite
+- **Database**: MySQL 8.0+ atau MariaDB 10.3+
+- **RAM**: Minimum 2GB (Recommended 4GB+)
+- **Storage**: Minimum 10GB untuk aplikasi dan data
 
-## License
+### Software Dependencies
+- **Composer**: 2.x
+- **Node.js**: 18.x+ (untuk asset compilation)
+- **NPM/Yarn**: Latest stable version
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# Ticketing-Bus
-# Ticketing-Bus
+### Browser Support
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
+
+## 🚀 Panduan Instalasi
+
+### 1. Persiapan Environment
+
+```bash
+# Clone repository
+git clone https://github.com/your-username/e-ticketing-bus.git
+cd e-ticketing-bus
+
+# Install PHP dependencies
+composer install
+
+# Install Node.js dependencies
+npm install
+
+# Copy environment file
+cp .env.example .env
+```
+
+### 2. Konfigurasi Environment
+
+Edit file `.env` dan sesuaikan konfigurasi berikut:
+
+```env
+# Database Configuration
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=e_ticketing_bus
+DB_USERNAME=your_db_user
+DB_PASSWORD=your_db_password
+
+# Application Configuration
+APP_NAME="E-Ticketing Bus PT. Four Best Synergy"
+APP_ENV=local
+APP_KEY=base64:your_app_key_here
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+# Mail Configuration (untuk notifikasi)
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your_email@gmail.com
+MAIL_PASSWORD=your_app_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your_email@gmail.com
+MAIL_FROM_NAME="${APP_NAME}"
+
+# Payment Gateway (jika menggunakan)
+PAYMENT_GATEWAY_API_KEY=your_api_key
+PAYMENT_GATEWAY_SECRET=your_secret
+```
+
+### 3. Setup Database
+
+```bash
+# Generate application key
+php artisan key:generate
+
+# Jalankan migration
+php artisan migrate
+
+# Seed data awal
+php artisan db:seed
+```
+
+### 4. Compile Assets
+
+```bash
+# Compile assets untuk production
+npm run build
+
+# Atau untuk development
+npm run dev
+```
+
+### 5. Menjalankan Aplikasi
+
+```bash
+# Jalankan server development
+php artisan serve
+
+# Atau menggunakan custom host/port
+php artisan serve --host=0.0.0.0 --port=8000
+```
+
+Aplikasi akan berjalan di `http://localhost:8000`
+
+### 6. Setup Admin User
+
+```bash
+# Buat admin user pertama
+php artisan tinker
+
+# Di dalam tinker, jalankan:
+User::create([
+    'name' => 'Admin',
+    'email' => 'admin@fourbest.co.id',
+    'password' => Hash::make('password'),
+    'role' => 'admin'
+]);
+```
+
+### 7. Akses Admin Panel
+
+Buka browser dan akses:
+- **Frontend Customer**: `http://localhost:8000`
+- **Admin Panel**: `http://localhost:8000/admin`
+
+Login dengan kredensial admin yang dibuat pada langkah 6.
+
+## 📖 Cara Penggunaan
+
+### Untuk Customer
+1. **Registrasi/Login**: Daftar akun atau login ke sistem
+2. **Cari Jadwal**: Pilih rute, tanggal, dan waktu keberangkatan
+3. **Pilih Kursi**: Klik kursi yang tersedia pada layout bus
+4. **Isi Data Penumpang**: Lengkapi informasi penumpang
+5. **Pilih Metode Pembayaran**: Pilih cara pembayaran
+6. **Konfirmasi Pembayaran**: Selesaikan pembayaran sesuai metode
+7. **Cetak Tiket**: Simpan atau cetak e-tiket
+
+### Untuk Admin
+1. **Login ke Admin Panel**: Akses `/admin`
+2. **Kelola Master Data**: Setup rute, kendaraan, jadwal
+3. **Monitor Booking**: Lihat dan kelola pemesanan
+4. **Proses Pembayaran**: Verifikasi pembayaran manual
+5. **Generate Manifest**: Buat surat jalan untuk driver
+6. **Laporan**: Generate laporan penjualan dan operasional
+
+## 📁 Struktur Database
+
+Sistem menggunakan 11 tabel utama:
+
+```
+users (Pengguna)
+├── user_details (Detail pengguna)
+
+routes (Rute perjalanan)
+├── schedules (Jadwal perjalanan)
+│   ├── schedule_days (Hari operasional)
+
+vehicles (Kendaraan)
+├── vehicle_seats (Kursi per kendaraan)
+│   ├── seats (Data kursi)
+
+bookings (Pemesanan)
+├── booking_details (Detail pemesanan)
+├── payments (Pembayaran)
+
+trip_manifests (Surat jalan)
+├── trip_manifest_details (Detail manifest)
+
+settings (Pengaturan sistem)
+```
+
+Detail lengkap ERD dapat dilihat di [`docs/erd_diagram.md`](docs/erd_diagram.md)
+
+## 🔧 Konfigurasi Tambahan
+
+### Queue Worker (untuk email & background jobs)
+```bash
+# Jalankan queue worker
+php artisan queue:work
+
+# Atau menggunakan supervisor untuk production
+# Setup supervisor config di /etc/supervisor/conf.d/
+```
+
+### Storage Link (untuk file uploads)
+```bash
+php artisan storage:link
+```
+
+### Cache Optimization
+```bash
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+## 🧪 Testing
+
+```bash
+# Jalankan semua test
+php artisan test
+
+# Jalankan test spesifik
+php artisan test --filter=BookingTest
+
+# Jalankan test dengan coverage
+php artisan test --coverage
+```
+
+## 📊 Monitoring & Logging
+
+- **Logs**: Semua aktivitas tercatat di `storage/logs/laravel.log`
+- **Queue Monitoring**: Pantau job queue melalui admin panel
+- **Performance**: Monitor response time dan database queries
+- **Error Tracking**: Setup error reporting ke external service
+
+## 🔒 Keamanan
+
+- **CSRF Protection**: Semua form dilindungi CSRF token
+- **SQL Injection Prevention**: Menggunakan Eloquent ORM
+- **XSS Protection**: Input sanitization dan escaping
+- **Rate Limiting**: API rate limiting untuk mencegah abuse
+- **Password Hashing**: Bcrypt hashing untuk password
+- **Session Security**: Secure session management
+
+## 🤝 Kontribusi
+
+1. Fork repository
+2. Buat branch fitur baru (`git checkout -b feature/AmazingFeature`)
+3. Commit perubahan (`git commit -m 'Add some AmazingFeature'`)
+4. Push ke branch (`git push origin feature/AmazingFeature`)
+5. Buat Pull Request
+
+## 📝 Lisensi
+
+Proyek ini menggunakan lisensi MIT. Lihat file `LICENSE` untuk detail lebih lanjut.
+
+## 📞 Dukungan
+
+Untuk dukungan teknis atau pertanyaan:
+- Email: support@fourbest.co.id
+- WhatsApp: +62 822-6017-3314
+- Website: https://fourbest.co.id
+
+## 📚 Dokumentasi Tambahan
+
+- [Entity-Relationship Diagram](docs/erd_diagram.md)
+- [System Requirements](docs/test-system-booking-tiket-bus-pt-four-best-synergy.pdf)
+- [Schedule System Flow](docs/schedule-system-flow.md)
+- [Testing Report](docs/testing-report.md)
+
+---
+
+**Dikembangkan dengan ❤️ oleh PT. Four Best Synergy**
