@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             VehicleSeeder::class,
             RouteSeeder::class,
             ScheduleSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }
