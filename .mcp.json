@@ -1,0 +1,48 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "php",
+            "args": ["artisan", "boost:mcp"]
+        },
+        "exa": {
+            "command": "npx",
+            "args": ["-y", "exa-mcp-server"],
+            "env": {
+                "EXA_API_KEY": "334b87d2-b3aa-47af-94f0-f3c5466f241b"
+            },
+            "@magicuidesign/mcp": {
+                "command": "npx",
+                "args": ["-y", "@magicuidesign/mcp@latest"]
+            },
+            "alwaysAllow": ["web_search_exa"]
+        },
+        "context7": {
+            "command": "npx",
+            "args": ["-y", "@upstash/context7-mcp"],
+            "env": {
+                "DEFAULT_MINIMUM_TOKENS": ""
+            },
+            "alwaysAllow": ["resolve-library-id"]
+        },
+        "notion": {
+            "command": "npx",
+            "args": ["-y", "@notionhq/notion-mcp-server"],
+            "env": {
+                "OPENAPI_MCP_HEADERS": "{\"Authorization\": \"Bearer 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\", \"Notion-Version\": \"2022-06-28\"}"
+            },
+            "alwaysAllow": ["API-post-search"]
+        },
+        "filesystem": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-filesystem",
+                "/media/adptra01/Data/laragon/"
+            ]
+        },
+        "sequentialthinking": {
+            "command": "npx",
+            "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+        }
+    }
+}
